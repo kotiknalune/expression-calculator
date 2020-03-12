@@ -1,47 +1,34 @@
-const operators = {
-    "+" : (a, b) => a + b,
-    "-" : (a, b) => a - b,
-    "*" : (a, b) => a * b,
-    "/" : (a, b) => a / b
+function eval() {
+    throw new Error("Do not use eval");
 }
 
-function calculate(expression) {
-    let exp = expression.split(" ");
+function expressionCalculator(expr) {
 
-    function calc(a, b){
-        for (let i = 1; i < e.length - 1; i++) {
-            if (exp[i] == a || exp[i] == b) {
-                exp[i] = operators[ exp[i] ]( +exp[i-1], +exp[i+1] );
-                exp.splice(i-1, 3, exp[i]);
-                i--;
-            }
-        }
+
+ 	  let expression = expr.split(" ").join(""), //  remove empty spaces
+         leftBrackets = expression.replace(/[^(]/g, ""),
+         rightBrackets = expression.replace(/[^)]/g, ""); 
+
+    // STEP 1: check for errors
+    if(expression.includes("/0") ) {
+        throw new Error("TypeError: Division by zero.");
     }
-    calculate("*", "/");
-    calculate("+", "-");
-    return +exp[0];
-}
-
-function validate(expression){
-    let validator = expression.split(" ").filter(a => a != "").join("");
-
-    if (validator.replace(/[^(]/g, "").length != validator.replace(/[^)]/g, "").length || validator.includes("/0")) {
-      throw new Error;
+    if(leftBrackets.length != rightBrackets.length) {
+      throw new Error("ExpressionError: Brackets must be paired");
     }
-}
 
-function expressionCalculator(expression) {
-    validate(expression);
-    expression = expression.replace(/\s/g, "").replace(/(\*|\/|\+|\-)/g, " $& ");
+    // STEP 2: convert operators
+     const operators = (a, operator, b) => {
+        switch (operator) {
+            case '*': return a * b;
+            case '/': return b / a;
+            case '+': return a + b;
+            case '-': return b - a;
+ 			 }
+ 		}
 
-    if (expression.match(/\(/g) != null ) {
-        for (let i = expression.match(/\(/g).length; i != 0; i--) {
-            let calculation = expression.match(/(\([0-9\+\/\*\-. ]+\))/g)[0];
-            let expression = calculation.slice( 1, calculation.length-1 );
-            expression = expression.replace(calculation, calculate(expression));
-        }
-    }
-    return calculate(expression);
+ 	// STEP 3: calculate	 
+ return 0;
 }
 
 module.exports = {
