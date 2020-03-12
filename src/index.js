@@ -1,7 +1,3 @@
-function eval() {
-    throw new Error("You fool...");
-}
-
 const operators = {
     "+" : (a, b) => a + b,
     "-" : (a, b) => a - b,
@@ -9,52 +5,43 @@ const operators = {
     "/" : (a, b) => a / b
 }
 
-function calculate(expr) {
-    let e = expr.split(" ");
+function calculate(expression) {
+    let exp = expression.split(" ");
 
-    function calc(o1, o2){
+    function calc(a, b){
         for (let i = 1; i < e.length - 1; i++) {
-            if (e[i] == o1 || e[i] == o2) {
-                e[i] = o[ e[i] ]( +e[i-1], +e[i+1] );
-                e.splice(i-1, 3, e[i]);
+            if (exp[i] == a || exp[i] == b) {
+                exp[i] = operators[ exp[i] ]( +exp[i-1], +exp[i+1] );
+                exp.splice(i-1, 3, exp[i]);
                 i--;
             }
         }
     }
-    calc("*", "/");
-    calc("+", "-");
-
-    return +e[0];
+    calculate("*", "/");
+    calculate("+", "-");
+    return +exp[0];
 }
 
-function checkForErrors(expr){
-    let checker = expr.split(" ").filter(e => e != "").join("");
+function validate(expression){
+    let validator = expression.split(" ").filter(a => a != "").join("");
 
-    // "(" and ")" quantities are equal
-    if ( checker.replace(/[^(]/g, "").length != checker.replace(/[^)]/g, "").length ) {
-      throw new Error("ExpressionError: Brackets must be paired");
-    }
-
-    // if divide by zero
-    if ( checker.includes("/0") ) {
-        throw new Error("TypeError: Division by zero.");
+    if (validator.replace(/[^(]/g, "").length != validator.replace(/[^)]/g, "").length || validator.includes("/0")) {
+      throw new Error;
     }
 }
 
-function expressionCalculator(expr) {
-    checkForErrors(expr);
+function expressionCalculator(expression) {
+    validate(expression);
+    expression = expression.replace(/\s/g, "").replace(/(\*|\/|\+|\-)/g, " $& ");
 
-    expr = expr.replace(/\s/g, "").replace(/(\*|\/|\+|\-)/g, " $& ");
-
-    if (expr.match(/\(/g) != null ) {
-        for (let i = expr.match(/\(/g).length; i != 0; i--) {
-            let calculation = expr.match(/(\([0-9\+\/\*\-. ]+\))/g)[0];
+    if (expression.match(/\(/g) != null ) {
+        for (let i = expression.match(/\(/g).length; i != 0; i--) {
+            let calculation = expression.match(/(\([0-9\+\/\*\-. ]+\))/g)[0];
             let expression = calculation.slice( 1, calculation.length-1 );
-            expr = expr.replace(calculation, calculate(expression));
+            expression = expression.replace(calculation, calculate(expression));
         }
     }
-  
-    return calculate(expr);
+    return calculate(expression);
 }
 
 module.exports = {
