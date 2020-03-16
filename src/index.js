@@ -1,5 +1,5 @@
 function expressionCalculator(expr) {  
-    //' 20 - 57 * 12 - (  58 + 84 * 32 / 27  ) '
+    // https://www.youtube.com/watch?v=Vk-tGND2bfc  // solution algorithm
    const expArray = expr.match(/\d+|\+|\-|\*|\/|\(|\)/g); // fixes issue with spaces in tests
          leftBrackets = expr.replace(/[^(]/g, ''),
          rightBrackets = expr.replace(/[^)]/g, ''); 
